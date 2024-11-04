@@ -4,29 +4,31 @@ const mongoose = require('mongoose');
 const User = require('../models/User');
 const UserProfile = require('../models/UserProfile');
 
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}).then(() => {
-  console.log('MongoDB connected for UserProfile seeding');
-  insertUserProfiles();
-}).catch(err => console.log(err));
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('MongoDB connected for UserProfile seeding'))
+  .catch(err => console.log(err));
 
 const seedUserProfiles = async () => {
   try {
-    const users = await User.find();  // 获取所有用户
-    const profiles = users.map(user => ({
-      userId: user._id,
-      name: `User ${user._id}`,  // 可以根据需要自定义
-      birthdate: new Date('1990-01-01'),
-      gender: 'Male',
-      phone: '123-456-7890',
-      address: '123 Main St',
-    }));
-    await UserProfile.insertMany(profiles);
-    console.log('UserProfile data inserted successfully');
-  } catch (err) {
-    console.log('Error inserting user profile data:', err);
+    const user = await User.findOne({ email: 'example@example.com' }); // 查找一个测试用户
+    if (user) {
+      const profileData = {
+        userId: user._id,
+        name: 'Guillaume Yue',
+        birthdate: new Date('1993-08-08'),
+        gender: 'Male',
+        phone: '(514) 566-3218',
+        addresses: [
+          { type: 'Home', address: '2100 Boulevard de Maisonneuve O, Montréal, QC' },
+          { type: 'Work', address: 'Sinsa-dong Community Service Center, 128 Apgujeong-ro, Sinsa-dong, Gangnam-gu, Seoul' },
+        ],
+      };
+
+      await UserProfile.create(profileData);
+      console.log('UserProfile seeded successfully');
+    }
+  } catch (error) {
+    console.log('Error seeding UserProfile:', error);
   } finally {
     mongoose.connection.close();
   }

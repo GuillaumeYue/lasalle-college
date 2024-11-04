@@ -4,7 +4,7 @@ import axios from 'axios';
 import { MdOutlineTravelExplore } from 'react-icons/md';
 import { AiFillCloseCircle, AiOutlineClose } from "react-icons/ai";
 import { TbGridDots } from 'react-icons/tb';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
     const [active, setActive] = useState(false);
@@ -15,6 +15,7 @@ const Navbar = () => {
     const [reEnterPassword, setReEnterPassword] = useState('');
     const [loginError, setLoginError] = useState(null);
     const [isSignUp, setIsSignUp] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -41,27 +42,28 @@ const Navbar = () => {
         setLoginError(null);
         
         try {
-          const endpoint = isSignUp ? 'signup' : 'login';
-          const response = await axios.post(`http://localhost:5000/api/users/${endpoint}`, {
-            email,
-            password,
-          });
+            const endpoint = isSignUp ? 'signup' : 'login';
+            const response = await axios.post(`http://localhost:5000/api/users/${endpoint}`, {
+                email,
+                password,
+            });
       
-          if (response.status === 200 || response.status === 201) {
-            localStorage.setItem('token', response.data.token);
-            setIsLoggedIn(true);
-            setShowLoginModal(false);
-          }
+            if (response.status === 200 || response.status === 201) {
+                localStorage.setItem('token', response.data.token);
+                setIsLoggedIn(true);
+                setShowLoginModal(false);
+            }
         } catch (error) {
-          console.error('Error response:', error.response); // 输出完整的错误响应
-          setLoginError(error.response?.data?.message || 'An error occurred. Please try again later.');
+            console.error('Error response:', error.response); 
+            setLoginError(error.response?.data?.message || 'An error occurred. Please try again later.');
         }
-      };
+    };
 
     const handleLogout = () => {
         localStorage.removeItem('token');
         setIsLoggedIn(false);
         setEmail('');
+        navigate('/');
     };
 
     return (

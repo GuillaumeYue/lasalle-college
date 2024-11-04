@@ -1,93 +1,81 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import "./userProfile.css";
+// src/Components/UserProfile/UserProfile.jsx
+import React from 'react';
+import './userProfile.css';
 
 const UserProfile = () => {
-  const [user, setUser] = useState(null);
-  const [error, setError] = useState(null);
-  const userId = localStorage.getItem('userId'); // Fetch the user ID from localStorage or another source
-
-  useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        const response = await axios.get(`http://localhost:5000/api/userProfiles/${userId}`);
-        setUser(response.data);
-      } catch (error) {
-        const message = error.response?.data?.message || "Error fetching user profile";
-        setError(message);
-        console.error(error);
-      }
+    // 模拟用户数据（可以从 API 获取真实数据）
+    const user = {
+        profilePicture: '/path/to/profile_picture.jpg',
+        name: 'Guillaume Yue',
+        birthday: 'August 8, 1993',
+        gender: 'Male',
+        email: 'alexyuehan@gmail.com',
+        alternateEmail: '137412785@qq.com',
+        phone: '(514) 566-3218',
+        addresses: [
+            { type: 'Home', address: '2100 Boulevard de Maisonneuve O, Montréal, QC' },
+            { type: 'Work', address: 'Sinsa-dong Community Service Center, 128 Apgujeong-ro, Sinsa-dong, Gangnam-gu, Seoul' },
+            { type: 'Other', address: 'Other addresses you added' },
+        ],
     };
 
-    if (userId) {
-      fetchUserProfile();
-    } else {
-      setError("User not logged in");
-    }
-  }, [userId]);
+    return (
+        <div className="userProfile">
+            <h1>Personal info</h1>
+            <p>Info about you and your preferences across our services</p>
 
-  if (error) return <p>{error}</p>;
-  if (!user) return <p>Loading...</p>;
+            <section className="profileSection">
+                <h2>Your profile info in our services</h2>
+                <p>Personal info and options to manage it. You can make some of this info visible to others so they can reach you easily.</p>
+                
+                {/* Basic Info */}
+                <div className="infoSection">
+                    <h3>Basic info</h3>
+                    <div className="infoRow">
+                        <label>Profile picture</label>
+                        <img src={user.profilePicture} alt="Profile" className="profilePicture" />
+                    </div>
+                    <div className="infoRow">
+                        <label>Name</label>
+                        <p>{user.name}</p>
+                    </div>
+                    <div className="infoRow">
+                        <label>Birthday</label>
+                        <p>{user.birthday}</p>
+                    </div>
+                    <div className="infoRow">
+                        <label>Gender</label>
+                        <p>{user.gender}</p>
+                    </div>
+                </div>
 
-  return (
-    <div className="userProfile container">
-      <h2>Personal info</h2>
-      <p>Info about you and your preferences across our services</p>
+                {/* Contact Info */}
+                <div className="infoSection">
+                    <h3>Contact info</h3>
+                    <div className="infoRow">
+                        <label>Email</label>
+                        <p>{user.email}</p>
+                        <p>{user.alternateEmail}</p>
+                    </div>
+                    <div className="infoRow">
+                        <label>Phone</label>
+                        <p>{user.phone}</p>
+                    </div>
+                </div>
 
-      <section className="profileSection">
-        <h3>Your profile info</h3>
-        <p>Personal info and options to manage it. You can make some of this info visible to others.</p>
-
-        <div className="infoBox">
-          <h4>Basic info</h4>
-          <div className="infoRow">
-            <span>Profile picture</span>
-            <img src={user.profilePicture || 'defaultProfilePicture.png'} alt="Profile" className="profilePicture" />
-          </div>
-          <div className="infoRow">
-            <span>Name</span>
-            <span>{user.name || 'N/A'}</span>
-          </div>
-          <div className="infoRow">
-            <span>Birthday</span>
-            <span>{user.birthdate ? new Date(user.birthdate).toLocaleDateString() : 'N/A'}</span>
-          </div>
-          <div className="infoRow">
-            <span>Gender</span>
-            <span>{user.gender || 'N/A'}</span>
-          </div>
+                {/* Address Info */}
+                <div className="infoSection">
+                    <h3>Addresses</h3>
+                    {user.addresses.map((address, index) => (
+                        <div className="infoRow" key={index}>
+                            <label>{address.type}</label>
+                            <p>{address.address}</p>
+                        </div>
+                    ))}
+                </div>
+            </section>
         </div>
-
-        <div className="infoBox">
-          <h4>Contact info</h4>
-          <div className="infoRow">
-            <span>Email</span>
-            <span>{user.email || 'N/A'}</span>
-          </div>
-          <div className="infoRow">
-            <span>Phone</span>
-            <span>{user.phone || 'N/A'}</span>
-          </div>
-        </div>
-
-        <div className="infoBox">
-          <h4>Addresses</h4>
-          <div className="infoRow">
-            <span>Home</span>
-            <span>{user.address?.home || 'N/A'}</span>
-          </div>
-          <div className="infoRow">
-            <span>Work</span>
-            <span>{user.address?.work || 'N/A'}</span>
-          </div>
-          <div className="infoRow">
-            <span>Other</span>
-            <span>{user.address?.other || 'N/A'}</span>
-          </div>
-        </div>
-      </section>
-    </div>
-  );
+    );
 };
 
 export default UserProfile;
