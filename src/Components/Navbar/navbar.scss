@@ -1,0 +1,317 @@
+:root{
+    --PrimaryColor: hsl(199, 100%, 33%);
+    --SecondaryColor: hsl(187, 85%, 43%);
+    --gradientColor: linear-gradient(to right, hsl(187, 85%, 43%), hsl(199, 100%, 33%));
+    --whiteColor: hsl(0, 0%, 100%);
+    --blackColor: hsl(201, 33%, 16%);
+    --textColor: hsl(240, 4%, 36%);
+    --whiteColorDeam: hsl(0, 0%, 93%);
+    --greyText: rgb(190, 190, 190);
+    --inputColor: rgb(239, 239, 239);
+    --bodyColor: rgb(240, 240, 246);
+    --cardBG: rgb(225, 225, 235);
+}
+
+
+.header{
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--whiteColorDeam);
+    width: 100%;
+    padding: 1rem;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(2, 15, 29, 0.242);
+    
+    .logo{
+        color: var(--blackColor);
+        font-weight: 600;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+
+        .icon{
+            font-size: 25px;
+            color: var(--PrimaryColor);
+            transform: translateY(5px);
+        }
+    }
+
+    @media screen and (max-width: 768px){
+        .navBar{
+            position: absolute;
+            background: var(--whiteColorDeam);
+            height: max-content;
+            width: 80%;
+            border-radius: 1rem;
+            top: -500rem;
+            left: 50%;
+            transform: translate(-50%);
+            padding: 1rem;
+            z-index: 2000;
+            box-shadow: 0 2px 4px rgba(2, 15, 29, 0.904);
+            transition: .5s ease-in-out;
+           
+            .navLists{
+                flex-direction: column;
+                justify-content: center;
+                width: 100%;
+                margin: auto;
+                padding: .5rem 0;
+
+                .navItem{
+                    padding: .5rem 0;
+
+                    .navLink{
+                        color: var(--textColor);
+                        font-size: .9rem;
+                        font-weight: 600;
+                        &:hover{
+                            color: var(--PrimaryColor);
+                        }
+                    }
+                }
+
+                .btn{
+                    margin-top: 1rem;
+
+                    a{
+                        font-weight: 600;
+                        color: var(--whiteColor);
+                    }
+                }
+            }
+
+            .closeNavbar{
+                position: absolute;
+                top: 1rem;
+                right: 1.5rem;
+                color: var(--PrimaryColor);
+                &:hover{
+                    color: var(--SecondaryColor);
+                }
+            }
+        }
+        
+        .activeNavbar{
+            top:7rem;
+        }
+    }
+
+    .toggleNavbar{
+        .icon{
+            font-size: 25px;
+            color: var(--PrimaryColor);
+        }
+        &:hover.icon{
+            color: var(--SecondaryColor);
+        }
+    }
+}
+
+//MEDIA QUERIES =========================
+
+@media screen and (min-width: 769px){
+    .toggleNavbar, .closeNavbar{
+        display: none;
+    }
+
+    .header{
+        padding: 1.5rem 2rem;
+
+        .navBar{
+            .navLists{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: row;
+
+                .navItem{
+                    .navLink{
+                        color: var(--textColor);
+                        padding: 0 0.45rem;
+                        font-size: 0.9rem;
+                        font-weight: 500;
+
+                        &:hover{
+                            color: var(--PrimaryColor);
+                        }
+                        
+                    }
+                }
+
+                .btn{
+                    margin-left: 1rem;
+                    a{
+                        color: var(--whiteColor);
+                        font-weight: 500;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media screen and (min-width: 960px){
+    .header{
+        .navnBar{
+            .navLists{
+                .navItem{
+                    padding: 0 0.7rem;
+                }
+            }
+        }
+    }
+}
+
+@media screen and (min-width: 1240px){
+    .header{
+        padding: 1rem 8.5rem;
+    }
+}
+
+/* 登录按钮和登出按钮的样式 */
+.loginBtn, .logoutBtn {
+    background-color: var(--PrimaryColor); // 使用项目的主色
+    color: var(--whiteColor); // 设置按钮文本颜色为白色
+    padding: 0.5rem 1rem; // 按钮内边距
+    border: none; // 去掉默认边框
+    cursor: pointer; // 鼠标悬停时变为指针
+    border-radius: 5px; // 圆角按钮
+    font-size: 14px; // 字体大小
+    font-weight: 500; // 字体粗细
+    transition: background-color 0.3s ease; // 背景颜色过渡效果
+  
+    &:hover {
+      background-color: var(--SecondaryColor); // 悬停时的背景颜色
+    }
+  }
+  
+  
+  .userInfo {
+    display: flex;
+    align-items: center;
+    color: var(--PrimaryColor);
+    font-weight: 600;
+  
+    span {
+      margin-right: 10px;
+    }
+  }
+  
+  /* 登录模态框的样式 */
+  /* ... 其他样式保持不变 ... */
+
+/* 登录模态框的样式 */
+.loginModal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    z-index: 1000;
+    width: 300px;
+    position: relative; // 确保定位的正确性
+
+    .closeBtnContainer {
+        position: absolute; // 绝对定位
+        top: 10px; // 距离顶部10px
+        right: 10px; // 距离右边10px
+        z-index: 1001; // 确保在其他内容上面
+        
+        .closeBtn {
+            background: transparent; // 背景透明
+            border: none; // 去掉边框
+            cursor: pointer; // 鼠标悬停变为指针
+            font-size: 20px; // 图标字体大小
+            color: var(--PrimaryColor); // 设置颜色
+
+            &:hover {
+                color: var(--SecondaryColor); // 悬停时颜色变化
+            }
+        }
+    }
+
+    .buttonContainer {
+        display: flex;
+        justify-content: center; // 按钮居中
+        margin-bottom: 1rem;
+
+        button {
+            background-color: var(--PrimaryColor);
+            color: var(--whiteColor);
+            padding: 0.5rem 1rem; 
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 14px; 
+            font-weight: 500; 
+            transition: background-color 0.3s ease; 
+            margin: 0 0.5rem; // 按钮间隔
+
+            &:hover {
+                background-color: var(--SecondaryColor);
+            }
+        }
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+
+        label {
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--PrimaryColor);
+        }
+
+        input {
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            border: 1px solid var(--PrimaryColor);
+            border-radius: 5px;
+            font-size: 14px;
+            color: var(--textColor);
+        }
+
+        button[type="submit"] {
+            background-color: var(--PrimaryColor);
+            color: var(--whiteColor);
+            padding: 0.5rem;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+
+            &:hover {
+                background-color: var(--SecondaryColor);
+            }
+        }
+    }
+
+    /* 错误提示样式 */
+    .error {
+        color: red;
+        margin-top: 1rem;
+        text-align: center;
+    }
+}
+
+/* 遮罩层，用于模态框背景 */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}   
+
+  
+  

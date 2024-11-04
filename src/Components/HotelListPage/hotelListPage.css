@@ -1,0 +1,115 @@
+/* src/Components/HotelListPage/hotelListPage.css */
+
+:root {
+    --PrimaryColor: hsl(199, 100%, 33%);
+    --SecondaryColor: hsl(187, 85%, 43%);
+    --whiteColor: hsl(0, 0%, 100%);
+    --blackColor: hsl(201, 33%, 16%);
+    --textColor: hsl(240, 4%, 36%);
+    --greyText: rgb(190, 190, 190);
+    --cardBG: rgb(225, 225, 235);
+    --cardHover: rgb(255, 255, 255);
+  }
+  
+  .hotelListPage {
+    width: 100%;
+    padding: 2rem 0;
+  
+    .secTitle {
+      .title {
+        position: relative;
+        color: var(--textColor);
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+        &::after {
+          content: '';
+          position: absolute;
+          background: var(--SecondaryColor);
+          height: 5px;
+          width: 120px;
+          left: 0;
+          bottom: -10px;
+        }
+      }
+    }
+  
+    .secContent {
+      display: grid;
+      gap: 1.5rem;
+  
+      .singleHotelCard {
+        background: var(--cardBG);
+        padding: 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(140, 140, 141, 0.549);
+        transition: 0.3s ease;
+  
+        &:hover {
+          background: var(--cardHover);
+          box-shadow: 1 4px 8px rgba(85, 85, 114, 0.549);
+        }
+  
+        .hotelInfo {
+          h4 {
+            color: var(--blackColor);
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+          }
+          p {
+            color: var(--textColor);
+            margin-bottom: 1rem;
+          }
+        }
+  
+        .roomOptions {
+          margin-top: 1rem;
+          h4 {
+            color: var(--blackColor);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+          }
+          .roomOption {
+            display: flex;
+            justify-content: space-between;
+            color: var(--textColor);
+            margin-bottom: 0.5rem;
+          }
+        }
+  
+        .bookingBtn {
+          width: 100%;
+          padding: 0.8rem;
+          background: var(--PrimaryColor);
+          color: var(--whiteColor);
+          border: none;
+          border-radius: 5px;
+          font-size: 1.1rem;
+          font-weight: bold;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+  
+          &:hover {
+            background: var(--SecondaryColor);
+          }
+        }
+      }
+    }
+  }
+  
+  /* 响应式设计 */
+  @media screen and (min-width: 768px) {
+    .hotelListPage {
+      .secContent {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  }
+  
+  @media screen and (min-width: 1024px) {
+    .hotelListPage {
+      .secContent {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+  }
+  

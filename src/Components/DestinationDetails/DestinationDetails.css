@@ -1,0 +1,82 @@
+/* Header Section */
+.destination-details .header-section {
+    position: relative;
+    width: 100%;
+    height: 400px;
+}
+
+.header-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.header-info {
+    position: absolute;
+    bottom: 20px;
+    left: 30px;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.header-info h1 {
+    margin: 0;
+    font-size: 36px;
+}
+
+.creator-info {
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.header-stats {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+/* Trip Details Section */
+.trip-details {
+    display: flex;
+    padding: 20px;
+}
+
+.sidebar {
+    width: 20%;
+    padding-right: 20px;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin-bottom: 10px;
+}
+
+.sidebar ul li a {
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+}
+
+.details-content {
+    width: 80%;
+}
+
+.details-content section {
+    margin-bottom: 30px;
+}
+
+.details-content h2 {
+    font-size: 28px;
+    margin-bottom: 15px;
+}
+
+.details-content p {
+    font-size: 16px;
+    line-height: 1.6;
+}
