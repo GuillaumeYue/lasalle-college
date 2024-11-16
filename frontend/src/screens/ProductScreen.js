@@ -1,12 +1,20 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { Row, Col, Image, ListGroup, Card, Button, ListGroupItem } from 'react-bootstrap';
-import products from '../products';
+import { Row, Col, Image, ListGroup, Card, Button } from 'react-bootstrap';
+import axios from 'axios';
 import Rating from '../components/Rating';
 
 const ProductScreen = () => {
-    const { id } = useParams(); // 使用 useParams 获取路由参数
-    const product = products.find(product => product._id === id);
+    const { id } = useParams(); // 从 URL 获取参数
+    const [product, setProduct] = useState({});
+
+    useEffect(() => {
+        const fetchProduct = async () => {
+            const { data } = await axios.get(`/api/products/${id}`); // 使用 id 而不是 match.params.id
+            setProduct(data);
+        };
+        fetchProduct();
+    }, [id]);
 
     return (
         <>
@@ -23,8 +31,7 @@ const ProductScreen = () => {
                             <h3>{product.name}</h3>
                         </ListGroup.Item>
                         <ListGroup.Item>
-                            <Rating value={product.rating} 
-                                    text={`${product.numReviews} reviews`} />
+                            <Rating value={product.rating} text={`${product.numReviews} reviews`} />
                         </ListGroup.Item>
                         <ListGroup.Item>Price: ${product.price}</ListGroup.Item>
                         <ListGroup.Item>Description: {product.description}</ListGroup.Item>
@@ -50,10 +57,12 @@ const ProductScreen = () => {
                                 </Row>
                             </ListGroup.Item>
                             <ListGroup.Item>
-                                <Button 
-                                    className='w-100' 
-                                    type='button' 
-                                    disabled={product.countInStock === 0}>Add to Cart
+                                <Button
+                                    className='w-100'
+                                    type='button'
+                                    disabled={product.countInStock === 0}
+                                >
+                                    Add to Cart
                                 </Button>
                             </ListGroup.Item>
                         </ListGroup>
@@ -62,6 +71,6 @@ const ProductScreen = () => {
             </Row>
         </>
     );
-}
+};
 
 export default ProductScreen;
