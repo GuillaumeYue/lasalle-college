@@ -2,6 +2,34 @@ import asyncHandler from 'express-async-handler'
 import User from '../models/userModel.js'
 import generateToken from '../utils/generateToken.js'
 
+//@desc    注册一个新用户
+//@route   Post/api/users
+//@access  公开
+const registerUser = asyncHandler(async (req, res) => {
+    const {name, email, password} = req.body
+
+    const userExists = await User.findOne({email})
+    //用户已注册
+    if(userExists) {
+        res.status(400)
+        throw new Error('User already exists')
+    }
+    //注册新用户
+    const user = await User.create({name, email, password})
+    if(user){
+        res.status(201).json({
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            isAdmin: user.isAdmin,
+            token: generateToken(user._id)
+        }) 
+        }else{
+            res.status(400)
+            throw new Error('Invalid user data') 
+        }
+    })
+
 //@desc    用户身份验证 & 获取Token
 //@route   Post/api/users/login
 //@access  公开
@@ -24,6 +52,9 @@ const authUser = asyncHandler(async (req, res) => {
     }
 })
 
+
+
+
 //@desc    获取登陆成功的用户详情
 //@route   GET/api/users/profile
 //@access  私密
@@ -42,4 +73,4 @@ const getUserProfile = asyncHandler(async (req, res) => {
     }
 })
 
-export {authUser, getUserProfile}
+export {registerUser, authUser, getUserProfile}
