@@ -1,7 +1,9 @@
-import { USER_LOGIN_REQUEST } from '../constants/userConstants.js'
 import axios from 'axios'
+import { USER_LOGIN_REQUEST, USER_LOGOUT } from '../constants/userConstants.js'
 import { USER_LOGIN_SUCCESS } from '../constants/userConstants.js'
 import { USER_LOGIN_FAIL } from '../constants/userConstants.js'
+//import { USER_LOGOUT } from '../constants/userConstants.js'
+
 //用户登录Action
 export const login = (email, password) => async (dispatch) => {
     try{
@@ -25,4 +27,10 @@ export const login = (email, password) => async (dispatch) => {
             : error.message
          })
     }
+}
+
+//用户登出Action
+export const logout = () => (dispatch) => {
+    localStorage.removeItem('userInfo')
+    dispatch({type: USER_LOGOUT})
 }
