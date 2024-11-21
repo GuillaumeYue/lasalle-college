@@ -29,7 +29,7 @@ const CartScreen = () => {
 
   //支付函数
   const checkOutHandler = () => {
-    navigate('/login?redirect=shipping')
+    navigate('/shipping')
   }
   return (
     <Row>

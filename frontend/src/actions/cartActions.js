@@ -1,4 +1,5 @@
 import { CART_ADD_ITEM, CART_REMOVE_ITEM } from "../constants/cartConstants";
+import { CART_SAVE_SHIPPING_ADDRESS } from "../constants/cartConstants";
 import axios from "axios";
 
 export const addToCart = (id, qty) => async (dispatch, getState) => {
@@ -24,4 +25,12 @@ export const removeFromCart = (id) => async (dispatch, getState) => {
         payload: id
     })
     localStorage.setItem('cartItems', JSON.stringify(getState().cart.cartItems))
+}
+
+//保存收货地址action
+export const saveShippingAddress = (data) => async (dispatch) => {
+    dispatch({type: CART_SAVE_SHIPPING_ADDRESS, 
+        payload: data
+    })
+    localStorage.setItem('shippingAddress', JSON.stringify(data))
 }
