@@ -5,6 +5,9 @@ import { USER_LOGIN_FAIL } from '../constants/userConstants.js'
 import { USER_REGISTER_REQUEST } from '../constants/userConstants.js'
 import { USER_REGISTER_SUCCESS } from '../constants/userConstants.js'
 import { USER_REGISTER_FAIL } from '../constants/userConstants.js'
+import { USER_DETAILS_REQUEST } from '../constants/userConstants.js'
+import { USER_DETAILS_SUCCESS } from '../constants/userConstants.js'
+import { USER_DETAILS_FAIL } from '../constants/userConstants.js'
 //import { USER_LOGOUT } from '../constants/userConstants.js'
 
 //用户登录Action
@@ -60,6 +63,35 @@ export const register = (name,email, password) => async (dispatch) => {
             error.response.data.message 
             ? error.response.data.message 
             : error.message
+         })
+    }
+}
+
+//用户详情Action
+export const getUserDetails = (id) => async (dispatch, getState) => {
+    try{
+        dispatch({type: USER_DETAILS_REQUEST})
+
+        const {userLogin: {userInfo}} = getState()
+
+        //获取登录成功后的用户信息
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${userInfo.token}`
+            }
+        }
+        const {data} = await axios.get(`/api/users/${id}`, config)
+
+        dispatch({type: USER_DETAILS_SUCCESS, payload: data})
+
+    }
+    catch (error) {
+        dispatch({type: USER_DETAILS_FAIL, 
+            payload: 
+                error.response && error.response.data.message 
+                ? error.response.data.message 
+                : error.message
          })
     }
 }
