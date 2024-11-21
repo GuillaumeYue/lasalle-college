@@ -2,6 +2,7 @@ import { ORDER_CREATE_REQUEST, ORDER_CREATE_SUCCESS, ORDER_CREATE_FAIL } from ".
 import axios from "axios"
 import { ORDER_DETAILS_FAIL, ORDER_DETAILS_REQUEST, ORDER_DETAILS_SUCCESS } from "../constants/orderConstants"
 
+
 //创建订单reducer
 export const orderCreateReducer = (state = {}, action) =>{
     switch(action.type){
@@ -17,7 +18,7 @@ export const orderCreateReducer = (state = {}, action) =>{
 }
 
 //获取订单reducer
-export const orderDetailsReducer = (state = {orderItems: [], shippingAddress: {}}, action ) =>{
+export const orderDetailsReducer = (state = {loading: true, orderItems: [], shippingAddress: {}}, action ) =>{
     switch(action.type){
         case ORDER_DETAILS_REQUEST:
             return {...state,loading: true}
