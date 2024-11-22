@@ -123,5 +123,48 @@ const deleteUser = asyncHandler(async (req, res) => {
     }
 });
 
+//@desc    获取单个用户信息
+//@route   GET/api/users/:id
+//@access  私密（仅限管理员）
+const getUserById = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.id).select('-password');
+    if (user) {
+        res.json(user);
+    } else {
+        res.status(404);
+        throw new Error('User not found');
+    }
+});
 
-export {registerUser, authUser, getUserProfile, updateUserProfile, getUsers, deleteUser}
+//@desc    更新单个用户信息
+//@route   Put/api/users/:id
+//@access  私密（仅限管理员）
+const updateUser = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.id)
+     //获取更新后的资料
+     if(user) {
+        user.name = req.body.name || user.name
+        user.email = req.body.email || user.email
+        user.isAdmin = req.body.isAdmin || user.isAdmin
+        const updatedUser = await user.save()
+        res.json({
+            _id: updatedUser._id,
+            name: updatedUser.name,
+            email: updatedUser.email,
+            isAdmin: updatedUser.isAdmin,
+        })
+      } else{
+          res.status(404)
+          throw new Error('User not found')
+      }
+})
+
+
+export {registerUser, 
+        authUser, 
+        getUserProfile, 
+        updateUserProfile, 
+        getUsers, 
+        deleteUser, 
+        getUserById, 
+        updateUser}
