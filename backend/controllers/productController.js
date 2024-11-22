@@ -39,5 +39,59 @@ const deleteProduct = asyncHandler(async (req, res) => {
     }
 })
 
+//@desc    创建产品
+//@route   POST/api/products
+//@access  私密（仅限管理员）
+const createProduct = asyncHandler(async (req, res) => {
+    //创建一个产品模板
+    const product = new Product({
+        name: 'Sample product',
+        price: 0,
+        user: req.user._id,
+        image: '/images/sample.jpg',
+        brand: 'Sample brand',
+        category: 'Sample category',
+        countInStock: 0,
+        numReviews: 0,
+        description: 'Sample description',
+        rating: 0
+    })
+    const createdProduct = await product.save()
+    res.status(201).json(createdProduct)
+    if(product) {
+        await Product.deleteOne({ _id: req.params.id }); // 使用 deleteOne 方法
+        res.json({ message: 'Product removed' });
+    }
+    else {
+        res.status(404)
+        throw new Error('Product not found')
+    }
+})
 
-export {getProducts, getProductById, deleteProduct}
+//@desc    更新产品内容
+//@route   PUT/api/products/:id
+//@access  私密（仅限管理员）
+const updateProduct = asyncHandler(async (req, res) => {
+    //创建一个产品模板
+    const {name, price, image, brand, category, countInStock, description} = req.body
+
+    const product = await Product.findById(req.params.id)
+    if(product){
+        product.name = name
+        product.price = price
+        product.image = image
+        product.brand = brand
+        product.category = category
+        product.countInStock = countInStock
+        product.description = description
+        const createdProduct = await product.save()
+        res.status(201).json(createdProduct)
+        
+    } else {
+        res.status(404)
+        throw new Error('Product not found')
+    }
+})
+
+
+export {getProducts, getProductById, deleteProduct, createProduct, updateProduct}
