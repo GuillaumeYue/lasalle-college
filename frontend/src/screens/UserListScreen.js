@@ -2,18 +2,26 @@ import React, { useEffect } from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Table, Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom'; // 使用 useNavigate 替代 history.push
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import { listUsers } from '../actions/userActions';
 
 const UserListScreen = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate(); // 获取 navigate 函数
     const userList = useSelector((state) => state.userList);
     const { loading, error, users } = userList;
+    const userLogin = useSelector((state) => state.userLogin);
+    const { userInfo } = userLogin;
 
     useEffect(() => {
-        dispatch(listUsers());
-    }, [dispatch]);
+        if (userInfo && userInfo.isAdmin) {
+            dispatch(listUsers());
+        } else {
+            navigate('/login'); // 替换 history.push
+        }
+    }, [dispatch, navigate, userInfo]);
 
     // 删除用户函数
     const deleteHandler = (id) => {
@@ -60,7 +68,6 @@ const UserListScreen = () => {
                                     )}
                                 </td>
                                 <td>
-                                    {/* 将按钮封装在 <td> 内，符合 HTML 规范 */}
                                     <LinkContainer to={`/user/${user._id}/edit`}>
                                         <Button variant="light" className="btn-sm">
                                             <i className="fas fa-edit"></i>

@@ -1,4 +1,4 @@
-import { USER_LOGIN_FAIL, USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS, USER_LOGOUT, USER_UPDATE_PROFILE_RESET } from "../constants/userConstants"
+import { USER_LIST_RESET, USER_LOGIN_FAIL, USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS, USER_LOGOUT, USER_UPDATE_PROFILE_RESET } from "../constants/userConstants"
 import { USER_REGISTER_FAIL, USER_REGISTER_REQUEST, USER_REGISTER_SUCCESS } from "../constants/userConstants"
 import { USER_DETAILS_FAIL, USER_DETAILS_REQUEST, USER_DETAILS_SUCCESS } from "../constants/userConstants"
 import { USER_UPDATE_PROFILE_FAIL, USER_UPDATE_PROFILE_REQUEST, USER_UPDATE_PROFILE_SUCCESS} from "../constants/userConstants"
@@ -73,6 +73,8 @@ export const userListReducer = (state = {users: []}, action) =>{
             return {loading: false, users: action.payload}
         case USER_LIST_FAIL:
             return {loading: false, error: action.payload}
+        case USER_LIST_RESET:
+            return {users: []}
         default:
             return state
     }
