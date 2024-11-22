@@ -4,7 +4,8 @@ import { composeWithDevTools } from 'redux-devtools-extension'
 import { productDetailsReducer, 
         productListReducer,
         productDeleteReducer,
-        productCreateReducer
+        productCreateReducer,
+        productUpdateReducer,
         } from './reducers/productReducers'
 import { cartReducer } from './reducers/cartReducers'
 import { userDetailsReducer, 
@@ -34,6 +35,7 @@ const reducer  = combineReducers({
     userUpdate: userUpdateReducer,
     orderCreate: orderCreateReducer, 
     orderDetails: orderDetailsReducer,
+    productUpdate: productUpdateReducer,
 })
 
 //获取本地存储的购物车信息
