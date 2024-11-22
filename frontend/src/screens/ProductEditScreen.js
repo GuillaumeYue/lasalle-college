@@ -1,6 +1,7 @@
+import axios from 'axios';
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom'; // 更新为 React Router v6 的 hooks
-import { Form, Button, Row, Col } from 'react-bootstrap';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Form, Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
@@ -9,8 +10,8 @@ import FormContainer from '../components/FormContainer';
 import { PRODUCT_UPDATE_RESET } from '../constants/productConstants';
 
 const ProductEditScreen = () => {
-  const { id: productId } = useParams(); // 使用 useParams 替代 match.params
-  const navigate = useNavigate(); // 使用 useNavigate 替代 history.push
+  const { id: productId } = useParams();  // 使用 useParams 获取路由参数
+  const navigate = useNavigate();  // 使用 useNavigate 进行导航
 
   const [name, setName] = useState('');
   const [price, setPrice] = useState(0);
@@ -19,6 +20,7 @@ const ProductEditScreen = () => {
   const [category, setCategory] = useState('');
   const [countInStock, setCountInStock] = useState(0);
   const [description, setDescription] = useState('');
+  const [uploading, setUploading] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -31,9 +33,9 @@ const ProductEditScreen = () => {
   useEffect(() => {
     if (successUpdate) {
       dispatch({ type: PRODUCT_UPDATE_RESET });
-      navigate('/admin/productlist');
-    }else{
-      if (!product || product._id !== productId) {
+      navigate('/admin/productlist');  // 使用 navigate 替代 history.push
+    } else {
+      if (!product.name || product._id !== productId) {
         dispatch(listProductDetails(productId));
       } else {
         setName(product.name);
@@ -45,94 +47,130 @@ const ProductEditScreen = () => {
         setDescription(product.description);
       }
     }
-  }, [dispatch, product, productId, navigate, successUpdate]);
+  }, [dispatch, navigate, productId, product, successUpdate]);
 
   const submitHandler = (e) => {
     e.preventDefault();
-    // dispatch 更新产品的逻辑
-    dispatch(updateProduct({ _id: productId, name, price, image, brand, category, countInStock, description }));
+    dispatch(updateProduct({
+      _id: productId,
+      name,
+      price,
+      image,
+      brand,
+      category,
+      countInStock,
+      description,
+    }));
   };
+
+  const uploadFileHandler = async (e) => {
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append('image', file);//和路由里的upload.single(image)对应
+    setUploading(true);
+
+    try {
+        const config = {
+            headers: {
+                // 移除这行: 'Content-Type': 'multipart/form-data',
+            },
+        };
+        const { data } = await axios.post('/api/upload', formData, config);
+        setImage(data);
+        setUploading(false);
+    } catch (error) {
+        console.error(error);
+        setUploading(false);
+    }
+};
+
 
   return (
     <FormContainer>
-      <Link to="/admin/productlist" className="btn btn-dark my-3">
-        Back
+      <Link to='/admin/productlist' className='btn btn-dark my-3'>
+        返回上一页
       </Link>
-      <h1>Edit Product</h1>
+      <h1>编辑产品界面</h1>
       {loadingUpdate && <Loader />}
-      {errorUpdate && <Message variant="danger">{errorUpdate}</Message>}
+      {errorUpdate && <Message variant='danger'>{errorUpdate}</Message>}
       {loading ? (
         <Loader />
       ) : error ? (
-        <Message variant="danger">{error}</Message>
+        <Message variant='danger'>{error}</Message>
       ) : (
         <Form onSubmit={submitHandler}>
-          <Form.Group controlId="name" className="mb-3">
-            <Form.Label>Product Name</Form.Label>
+          <Form.Group controlId='name'>
+            <Form.Label>名称：</Form.Label>
             <Form.Control
-              type="text"
-              placeholder="Enter name"
+              type='name'
+              placeholder='请输入产品名称'
               value={name}
               onChange={(e) => setName(e.target.value)}
             ></Form.Control>
           </Form.Group>
-          <Form.Group controlId="price" className="mb-3">
-            <Form.Label>Price</Form.Label>
+          <Form.Group controlId='price'>
+            <Form.Label>产品价格：</Form.Label>
             <Form.Control
-              type="number"
-              placeholder="Enter price"
+              type='number'
+              placeholder='请输入价格'
               value={price}
               onChange={(e) => setPrice(e.target.value)}
             ></Form.Control>
           </Form.Group>
-          <Form.Group controlId="image" className="mb-3">
-            <Form.Label>Image</Form.Label>
+          <Form.Group controlId='image'>
+    <Form.Label>图片：</Form.Label>
+    <Form.Control
+      type='text'
+      placeholder='请输入图片路径'
+      value={image}
+      onChange={(e) => setImage(e.target.value)}
+    ></Form.Control>
+    <input 
+      type="file" 
+      id="image-file" 
+      onChange={uploadFileHandler}
+      className="form-control"
+    />
+    {uploading && <Loader />}
+    </Form.Group>
+    <Form.Group controlId='brand'>
+            <Form.Label>品牌：</Form.Label>
             <Form.Control
-                type="text"
-                placeholder="Enter image URL"
-                value={image}
-                onChange={(e) => setImage(e.target.value)}
-                className="w-100"
-            ></Form.Control>
-            </Form.Group>
-          <Form.Group controlId="brand" className="mb-3">
-            <Form.Label>Brand</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter brand"
+              type='text'
+              placeholder='请输入品牌'
               value={brand}
               onChange={(e) => setBrand(e.target.value)}
             ></Form.Control>
-          </Form.Group>
-          <Form.Group controlId="countInStock" className="mb-3">
-            <Form.Label>Count In Stock</Form.Label>
+          </Form.Group>{' '}
+          <Form.Group controlId='countInStock'>
+            <Form.Label>产品库存：</Form.Label>
             <Form.Control
-              type="number"
-              placeholder="Enter stock count"
+              type='number'
+              placeholder='请输入库存数量'
               value={countInStock}
               onChange={(e) => setCountInStock(e.target.value)}
             ></Form.Control>
           </Form.Group>
-          <Form.Group controlId="category" className="mb-3">
-            <Form.Label>Category</Form.Label>
+          <Form.Group controlId='category'>
+            <Form.Label>产品类型：</Form.Label>
             <Form.Control
-              type="text"
-              placeholder="Enter category"
+              type='text'
+              placeholder='请输入产品类型'
               value={category}
               onChange={(e) => setCategory(e.target.value)}
             ></Form.Control>
           </Form.Group>
-          <Form.Group controlId="description" className="mb-3">
-            <Form.Label>Description</Form.Label>
+          <Form.Group controlId='description'>
+            <Form.Label>产品介绍：</Form.Label>
             <Form.Control
-              type="text"
-              placeholder="Enter description"
+              type='text'
+              placeholder='请输入产品介绍'
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             ></Form.Control>
           </Form.Group>
-          <Button type="submit" variant="primary">
-            Update
+          <Button type='submit' variant='primary'>
+            更新信息
           </Button>
         </Form>
       )}
