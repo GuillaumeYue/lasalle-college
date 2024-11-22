@@ -1,7 +1,10 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension'
-import { productDetailsReducer, productListReducer } from './reducers/productReducers'
+import { productDetailsReducer, 
+        productListReducer,
+        productDeleteReducer 
+        } from './reducers/productReducers'
 import { cartReducer } from './reducers/cartReducers'
 import { userDetailsReducer, 
         userListReducer, 
@@ -27,7 +30,8 @@ const reducer  = combineReducers({
     orderDetails: orderDetailsReducer,
     userList: userListReducer,
     userDelete: userDeleteReducer,
-    userUpdate: userUpdateReducer
+    userUpdate: userUpdateReducer,
+    productDelete: productDeleteReducer
 })
 
 //获取本地存储的购物车信息

@@ -153,7 +153,7 @@ export const listUsers = () => async (dispatch, getState) => {
     }
 }
 
-//删除用户ction
+//删除用户action
 export const deleteUser = (id) => async (dispatch, getState) => {
     try{
         dispatch({type: USER_DELETE_REQUEST})

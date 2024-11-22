@@ -1,6 +1,7 @@
 import asyncHandler from 'express-async-handler'
 import Product from '../models/productModel.js'
 
+
 //@desc    请求所有产品
 //@route   GET /api/products
 //@access  公开
@@ -23,5 +24,20 @@ const getProductById = asyncHandler(async (req, res) => {
     }
 })
 
+//@desc    删除单个产品
+//@route   DELETE/api/products/：id
+//@access  私密（仅限管理员）
+const deleteProduct = asyncHandler(async (req, res) => {
+    const product = await Product.findById(req.params.id)
+    if(product) {
+        await Product.deleteOne({ _id: req.params.id }); // 使用 deleteOne 方法
+        res.json({ message: 'Product removed' });
+    }
+    else {
+        res.status(404)
+        throw new Error('Product not found')
+    }
+})
 
-export {getProducts, getProductById}
+
+export {getProducts, getProductById, deleteProduct}
