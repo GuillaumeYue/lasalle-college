@@ -49,11 +49,10 @@ const PaymentScreen = () => {
                         />
                         <Form.Check
                             type="radio"
-                            label="Alipay"
-                            id="alipay"
+                            label="Paypal"
+                            id="Paypal"
                             name="paymentMethod"
-                            value="alipay"
-                            checked={paymentMethod === 'alipay'}
+                            value="Paypal"
                             onChange={(e) => setPaymentMethod(e.target.value)}
                             className="mb-3"
                         />
