@@ -4,6 +4,7 @@ import { USER_REGISTER_REQUEST, USER_REGISTER_SUCCESS, USER_REGISTER_FAIL } from
 import { USER_DETAILS_REQUEST, USER_DETAILS_SUCCESS, USER_DETAILS_FAIL  } from '../constants/userConstants.js'
 import { USER_UPDATE_PROFILE_REQUEST, USER_UPDATE_PROFILE_SUCCESS, USER_UPDATE_PROFILE_FAIL  } from '../constants/userConstants.js'
 import { USER_LIST_REQUEST, USER_LIST_SUCCESS, USER_LIST_FAIL  } from '../constants/userConstants.js'
+import { USER_DELETE_REQUEST, USER_DELETE_SUCCESS, USER_DELETE_FAIL  } from '../constants/userConstants.js'
 import { USER_LOGOUT } from '../constants/userConstants.js'
 
 //用户登录Action
@@ -143,6 +144,33 @@ export const listUsers = () => async (dispatch, getState) => {
     }
     catch (error) {
         dispatch({type: USER_LIST_FAIL, 
+            payload: 
+                error.response && error.response.data.message 
+                ? error.response.data.message 
+                : error.message
+         })
+    }
+}
+
+//删除用户ction
+export const deleteUser = (id) => async (dispatch, getState) => {
+    try{
+        dispatch({type: USER_DELETE_REQUEST})
+
+        const {userLogin: {userInfo}} = getState()
+
+        //获取登录成功后的用户信息
+        const config = {
+            headers: {
+                Authorization: `Bearer ${userInfo.token}`
+            }
+        }
+        const {data} = await axios.delete(`/api/users/${id}`, config)
+
+        dispatch({type: USER_DELETE_SUCCESS, payload: data})
+    }
+    catch (error) {
+        dispatch({type: USER_DELETE_FAIL, 
             payload: 
                 error.response && error.response.data.message 
                 ? error.response.data.message 

@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom'; // 使用 useNavigate 替代 history.push
 import Message from '../components/Message';
 import Loader from '../components/Loader';
-import { listUsers } from '../actions/userActions';
+import { listUsers, deleteUser } from '../actions/userActions';
 
 const UserListScreen = () => {
     const dispatch = useDispatch();
@@ -14,6 +14,8 @@ const UserListScreen = () => {
     const { loading, error, users } = userList;
     const userLogin = useSelector((state) => state.userLogin);
     const { userInfo } = userLogin;
+    const userDelete = useSelector((state) => state.userDelete);
+    const { success: successDelete } = userDelete;
 
     useEffect(() => {
         if (userInfo && userInfo.isAdmin) {
@@ -21,11 +23,13 @@ const UserListScreen = () => {
         } else {
             navigate('/login'); // 替换 history.push
         }
-    }, [dispatch, navigate, userInfo]);
+    }, [dispatch, navigate, userInfo, successDelete]);
 
     // 删除用户函数
     const deleteHandler = (id) => {
-        console.log('deleted');
+        if(window.confirm('Are you sure?')) {
+            dispatch(deleteUser(id));
+        }
     };
 
     return (

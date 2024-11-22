@@ -1,5 +1,5 @@
 import express from 'express';
-import {registerUser, authUser, getUserProfile, updateUserProfile, getUsers} from '../controllers/userController.js'
+import {registerUser, authUser, getUserProfile, updateUserProfile, getUsers, deleteUser} from '../controllers/userController.js'
 import { get } from 'mongoose';
 import { protect, admin } from '../middleware/authMiddleware.js';
 const router = express.Router();
@@ -11,7 +11,7 @@ router
     .route('/profile')
     .get(protect, getUserProfile)
     .put(protect, updateUserProfile)
-
+router.route('/:id').delete(protect, admin, deleteUser)
 
 
 
