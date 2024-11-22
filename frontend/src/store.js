@@ -8,7 +8,8 @@ import { userDetailsReducer,
         userLoginReducer, 
         userRegisterReducer, 
         userUpdateProfileReducer, 
-        userDeleteReducer
+        userDeleteReducer,
+        userUpdateReducer
         } from './reducers/userReducers'
 import { orderCreateReducer, orderDetailsReducer } from './reducers/orderReducers';
 
@@ -25,7 +26,8 @@ const reducer  = combineReducers({
     orderCreate: orderCreateReducer, 
     orderDetails: orderDetailsReducer,
     userList: userListReducer,
-    userDelete: userDeleteReducer
+    userDelete: userDeleteReducer,
+    userUpdate: userUpdateReducer
 })
 
 //获取本地存储的购物车信息

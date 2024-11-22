@@ -4,12 +4,13 @@ import { Form, Button, Row, Col } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
-import FormContainer from '../components/FormContainer';
 import { getUserDetails, updateUser } from '../actions/userActions';
+import FormContainer from '../components/FormContainer';
+import { USER_UPDATE_RESET } from '../constants/userConstants.js';
 
 const UserEditScreen = () => {
-  const { id: userId } = useParams(); // 获取 URL 参数
-  const navigate = useNavigate(); // 使用 navigate 替代 history.push
+  const { id: userId } = useParams(); // 使用 useParams 替代 match.params
+  const navigate = useNavigate(); // 使用 useNavigate 替代 history.push
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -20,19 +21,31 @@ const UserEditScreen = () => {
   const userDetails = useSelector((state) => state.userDetails);
   const { loading, error, user } = userDetails;
 
+  const userUpdate = useSelector((state) => state.userUpdate);
+  const {
+    loading: loadingUpdate,
+    error: errorUpdate,
+    success: successUpdate,
+  } = userUpdate;
+
   useEffect(() => {
-    if (!user || user._id !== userId) {
-      dispatch(getUserDetails(userId));
+    if (successUpdate) {
+      dispatch({ type: USER_UPDATE_RESET });
+      navigate('/admin/userlist'); // 替换 history.push
     } else {
-      setName(user.name);
-      setEmail(user.email);
-      setIsAdmin(user.isAdmin);
+      if (!user || user._id !== userId) {
+        dispatch(getUserDetails(userId));
+      } else {
+        setName(user.name);
+        setEmail(user.email);
+        setIsAdmin(user.isAdmin);
+      }
     }
-  }, [dispatch, user, userId]);
+  }, [dispatch, navigate, user, userId, successUpdate]);
 
   const submitHandler = (e) => {
     e.preventDefault();
-    // 在此处添加更新用户信息的逻辑
+    dispatch(updateUser({ _id: userId, name, email, isAdmin }));
   };
 
   return (
@@ -41,6 +54,8 @@ const UserEditScreen = () => {
         Back
       </Link>
       <h1>Edit User</h1>
+      {loadingUpdate && <Loader />}
+      {errorUpdate && <Message variant="danger">{errorUpdate}</Message>}
       {loading ? (
         <Loader />
       ) : error ? (
@@ -48,19 +63,19 @@ const UserEditScreen = () => {
       ) : (
         <Form onSubmit={submitHandler}>
           <Form.Group controlId="name" className="mb-4">
-            <Form.Label>姓名：</Form.Label>
+            <Form.Label>Name</Form.Label>
             <Form.Control
-              type="name"
-              placeholder="请输入姓名"
+              type="text"
+              placeholder="Enter name"
               value={name}
               onChange={(e) => setName(e.target.value)}
             ></Form.Control>
           </Form.Group>
           <Form.Group controlId="email" className="mb-4">
-            <Form.Label>邮箱地址：</Form.Label>
+            <Form.Label>Email:</Form.Label>
             <Form.Control
               type="email"
-              placeholder="请输入邮箱"
+              placeholder="Enter email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             ></Form.Control>
@@ -68,7 +83,7 @@ const UserEditScreen = () => {
           <Form.Group controlId="isAdmin" className="mb-4">
             <Form.Check
               type="checkbox"
-              label="Is admin"
+              label="Is Admin"
               checked={isAdmin}
               onChange={(e) => setIsAdmin(e.target.checked)}
             ></Form.Check>
