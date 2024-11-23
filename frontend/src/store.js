@@ -6,6 +6,7 @@ import { productDetailsReducer,
         productDeleteReducer,
         productCreateReducer,
         productUpdateReducer,
+        productReviewCreateReducer
         } from './reducers/productReducers'
 import { cartReducer } from './reducers/cartReducers'
 import { userDetailsReducer, 
@@ -20,11 +21,14 @@ import { orderCreateReducer, orderDetailsReducer, orderListReducer } from './red
 
 
 
+
 const reducer  = combineReducers({
     productList: productListReducer,
     productDetails: productDetailsReducer,
     productDelete: productDeleteReducer,
     productCreate: productCreateReducer,
+    productUpdate: productUpdateReducer,
+    productReviewCreate: productReviewCreateReducer,
     cart: cartReducer,
     userLogin: userLoginReducer,
     userRegister: userRegisterReducer,
@@ -36,7 +40,6 @@ const reducer  = combineReducers({
     orderCreate: orderCreateReducer, 
     orderDetails: orderDetailsReducer,
     orderList: orderListReducer,
-    productUpdate: productUpdateReducer,
 })
 
 //获取本地存储的购物车信息

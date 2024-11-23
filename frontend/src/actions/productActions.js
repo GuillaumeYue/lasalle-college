@@ -3,6 +3,7 @@ import { PRODUCT_DETAILS_FAIL,PRODUCT_DETAILS_REQUEST, PRODUCT_DETAILS_SUCCESS }
 import { PRODUCT_DELETE_FAIL,PRODUCT_DELETE_REQUEST, PRODUCT_DELETE_SUCCESS } from '../constants/productConstants'
 import { PRODUCT_CREATE_FAIL,PRODUCT_CREATE_REQUEST, PRODUCT_CREATE_SUCCESS } from '../constants/productConstants'
 import { PRODUCT_UPDATE_FAIL,PRODUCT_UPDATE_REQUEST, PRODUCT_UPDATE_SUCCESS } from '../constants/productConstants'
+import { PRODUCT_CREATE_REVIEW_FAIL,PRODUCT_CREATE_REVIEW_REQUEST, PRODUCT_CREATE_REVIEW_SUCCESS } from '../constants/productConstants'
 import axios from 'axios'
 
 //获取所有产品action
@@ -108,6 +109,33 @@ export const updateProduct = (product) => async (dispatch, getState) => {
     }
     catch (error) {
         dispatch({type: PRODUCT_UPDATE_FAIL, 
+            payload: 
+                error.response && error.response.data.message 
+                ? error.response.data.message 
+                : error.message
+         })
+    }
+}
+
+//创建产品评论action
+export const createProductReview = (productId, review) => async (dispatch, getState) => {
+    try{
+        dispatch({type: PRODUCT_CREATE_REVIEW_REQUEST})
+
+        const {userLogin: {userInfo}} = getState()
+
+        //获取登录成功后的用户信息
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${userInfo.token}`
+            }
+        }
+        const { data } = await axios.post(`/api/products/${productId}/reviews`, review, config)
+        dispatch({type: PRODUCT_CREATE_REVIEW_SUCCESS})
+    }
+    catch (error) {
+        dispatch({type: PRODUCT_CREATE_REVIEW_FAIL, 
             payload: 
                 error.response && error.response.data.message 
                 ? error.response.data.message 
