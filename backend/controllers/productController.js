@@ -93,5 +93,41 @@ const updateProduct = asyncHandler(async (req, res) => {
     }
 })
 
+//@desc    创建产品评论
+//@route   POST/api/products/:id/reviews
+//@access  私密
+const createProductReview = asyncHandler(async (req, res) => {
+    //创建一个产品模板
+    const {rating, comment} = req.body
+    const product = await Product.findById(req.params.id)
 
-export {getProducts, getProductById, deleteProduct, createProduct, updateProduct}
+    if(product){
+        //判断用户是否已经评论过
+        const alreadyReviewed = product.reviews.find(r => r.user.
+            toString() === req.user._id.toString())
+        if(alreadyReviewed) {
+            res.status(400)
+            throw new Error('Product already reviewed')
+        }
+
+    //创建新评论
+    const review = {
+        name: req.user.name,
+        rating: Number(rating),
+        comment,
+        user: req.user._id
+    }
+    product.reviews.push(review)
+    //更新产品评论数及总评分
+    product.numReviews = product.reviews.length
+    product.rating = product.reviews.reduce((acc,review) => acc + review.rating, 0) / product.reviews.length
+
+    await product.save()
+    res.status(201).json({message: 'Commnet added'})
+    } else {
+        res.status(404)
+        throw new Error('Product not found')
+    }
+})
+
+export {getProducts, getProductById, deleteProduct, createProduct, updateProduct, createProductReview}
