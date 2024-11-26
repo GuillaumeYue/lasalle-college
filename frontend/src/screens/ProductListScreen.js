@@ -1,27 +1,34 @@
 import React, { useEffect } from 'react';
-import { LinkContainer } from 'react-router-bootstrap';
+import { Link } from 'react-router-dom'; // 使用 Link 替代 LinkContainer
 import { Table, Button, Row, Col } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import { listProducts, deleteProduct, createProduct } from '../actions/productActions';
 import { PRODUCT_CREATE_RESET } from '../constants/productConstants';
-import { useNavigate } from 'react-router-dom';
+import Paginate from '../components/Paginate'; // 修正导入拼写
+
+import { useNavigate, useParams } from 'react-router-dom'; // 替换 history 和 match
 
 const ProductListScreen = () => {
+  const { pageNumber = 1 } = useParams(); // 从 URL 参数中获取页码，提供默认值 1
   const dispatch = useDispatch();
-  const navigate = useNavigate(); // 使用 useNavigate 替代 history.push
+  const navigate = useNavigate(); // 替代 history
 
   const productList = useSelector((state) => state.productList);
-  const { loading, error, products } = productList;
+  const { loading, error, products, pages, page } = productList;
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
   const productDelete = useSelector((state) => state.productDelete);
-  const { loading: loadingDelete, error: errorDelete, success: successDelete } = productDelete;
+  const {
+    loading: loadingDelete,
+    error: errorDelete,
+    success: successDelete,
+  } = productDelete;
 
-  const productCreate = useSelector((state) => state.productCreate); // 修复对 state.productDelete 的引用
+  const productCreate = useSelector((state) => state.productCreate);
   const {
     loading: loadingCreate,
     error: errorCreate,
@@ -32,16 +39,16 @@ const ProductListScreen = () => {
   useEffect(() => {
     dispatch({ type: PRODUCT_CREATE_RESET });
 
-    if (!userInfo?.isAdmin) {
-      navigate('/login'); // 使用 navigate 替代 history.push
+    if (!userInfo || !userInfo.isAdmin) {
+      navigate('/login'); // 替代 history.push
     }
 
     if (successCreate) {
-      navigate(`/admin/product/${createdProduct._id}/edit`);
+      navigate(`/admin/product/${createdProduct._id}/edit`); // 替代 history.push
     } else {
-      dispatch(listProducts());
+      dispatch(listProducts('', pageNumber));
     }
-  }, [dispatch, navigate, userInfo, successDelete, successCreate, createdProduct]);
+  }, [dispatch, navigate, userInfo, successDelete, successCreate, createdProduct, pageNumber]);
 
   // 删除产品函数
   const deleteHandler = (id) => {
@@ -57,11 +64,11 @@ const ProductListScreen = () => {
 
   return (
     <>
-      <Row className="align-items-center">
+      <Row>
         <Col>
           <h1>Products</h1>
         </Col>
-        <Col className="text-end">
+        <Col className="d-flex justify-content-end">
           <Button className="my-3" onClick={createProductHandler}>
             Create Product
           </Button>
@@ -76,43 +83,46 @@ const ProductListScreen = () => {
       ) : error ? (
         <Message variant="danger">{error}</Message>
       ) : (
-        <Table striped bordered hover responsive className="table-sm">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Product Name</th>
-              <th>Price</th>
-              <th>Category</th>
-              <th>Brand</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((product) => (
-              <tr key={product._id}>
-                <td>{product._id}</td>
-                <td>{product.name}</td>
-                <td>${product.price}</td>
-                <td>{product.category}</td>
-                <td>{product.brand}</td>
-                <td>
-                  <LinkContainer to={`/admin/product/${product._id}/edit`}>
-                    <Button variant="light" className="btn-sm">
-                      <i className="fas fa-edit"></i>
-                    </Button>
-                  </LinkContainer>
-                  <Button
-                    variant="danger"
-                    className="btn-sm"
-                    onClick={() => deleteHandler(product._id)}
-                  >
-                    <i className="fas fa-trash"></i>
-                  </Button>
-                </td>
+        <>
+          <Table striped bordered hover responsive className="table-sm">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Product Name</th>
+                <th>Price</th>
+                <th>Category</th>
+                <th>Brand</th>
+                <th>Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </Table>
+            </thead>
+            <tbody>
+              {products.map((product) => (
+                <tr key={product._id}>
+                  <td>{product._id}</td>
+                  <td>{product.name}</td>
+                  <td>${product.price}</td>
+                  <td>{product.category}</td>
+                  <td>{product.brand}</td>
+                  <td>
+                    <Link to={`/admin/product/${product._id}/edit`}>
+                      <Button variant="light" className="btn-sm">
+                        <i className="fas fa-edit"></i>
+                      </Button>
+                    </Link>
+                    <Button
+                      variant="danger"
+                      className="btn-sm"
+                      onClick={() => deleteHandler(product._id)}
+                    >
+                      <i className="fas fa-trash"></i>
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+          <Paginate pages={pages} page={page} isAdmin={true} />
+        </>
       )}
     </>
   );
