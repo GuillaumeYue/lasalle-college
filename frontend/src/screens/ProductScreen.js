@@ -37,13 +37,20 @@ const ProductScreen = () => {
       alert("Comment success");
       setRating(0);
       setComment("");
-    }
-    if (!product || product._id !== productId || successProductReview) {
-    //   dispatch({ type: PRODUCT_DETAILS_RESET });
-      dispatch(listProductDetails(productId));
       dispatch({ type: PRODUCT_CREATE_REVIEW_RESET });
     }
-  }, [dispatch, productId, product, successProductReview]);
+  
+    // 当产品详情不存在或产品 ID 不匹配时才获取产品详情
+    if (!product || product._id !== productId) {
+      dispatch(listProductDetails(productId));
+    }
+  
+    return () => {
+      // 当组件卸载时进行清理，以避免无限的 GET 请求
+      dispatch({ type: PRODUCT_DETAILS_RESET });
+    };
+  }, [dispatch, productId, successProductReview]);
+  
 
   const addToCartHandler = () => {
     navigate(`/cart/${productId}?qty=${qty}`);

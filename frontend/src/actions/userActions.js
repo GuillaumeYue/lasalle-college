@@ -38,6 +38,7 @@ export const logout = () => (dispatch) => {
     localStorage.removeItem('userInfo')
     dispatch({type: USER_LOGOUT})
     dispatch({type: USER_LIST_RESET})
+    document.location.href = '/login'
 }
 
 //用户注册Action
