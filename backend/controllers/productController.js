@@ -143,4 +143,12 @@ const createProductReview = asyncHandler(async (req, res) => {
     }
 })
 
-export {getProducts, getProductById, deleteProduct, createProduct, updateProduct, createProductReview}
+//@desc    请求排名前三的产品
+//@route   GET /api/products/top
+//@access  公开
+const getTopProducts = asyncHandler(async (req, res) => {
+    const products = await Product.find({}).sort({price: -1}).limit(3)
+    res.json(products)
+})
+
+export {getProducts, getProductById, deleteProduct, createProduct, updateProduct, createProductReview, getTopProducts}

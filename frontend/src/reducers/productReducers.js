@@ -4,6 +4,8 @@ import { PRODUCT_DELETE_FAIL, PRODUCT_DELETE_REQUEST, PRODUCT_DELETE_SUCCESS } f
 import { PRODUCT_CREATE_FAIL, PRODUCT_CREATE_REQUEST, PRODUCT_CREATE_SUCCESS } from "../constants/productConstants";
 import { PRODUCT_UPDATE_FAIL, PRODUCT_UPDATE_REQUEST, PRODUCT_UPDATE_RESET, PRODUCT_UPDATE_SUCCESS } from "../constants/productConstants";
 import { PRODUCT_CREATE_REVIEW_FAIL, PRODUCT_CREATE_REVIEW_REQUEST, PRODUCT_CREATE_REVIEW_RESET, PRODUCT_CREATE_REVIEW_SUCCESS } from "../constants/productConstants";
+import { PRODUCT_TOP_FAIL, PRODUCT_TOP_REQUEST, PRODUCT_TOP_SUCCESS } from "../constants/productConstants";
+
 
 //获取所有产品的reducer
 export const productListReducer = (state = { products: []}, action) => {
@@ -95,6 +97,23 @@ export const productReviewCreateReducer = (state = {}, action) => {
             return { loading: false, error: action.payload }
         case PRODUCT_CREATE_REVIEW_RESET:
             return {product: {}}
+        default:
+            return state
+    }
+}
+
+//获取Top3产品的reducer
+export const productTopRatedReducer = (state = { products: []}, action) => {
+    switch (action.type) {
+        case PRODUCT_TOP_REQUEST:
+            return { loading: true, products: [] }
+        case PRODUCT_TOP_SUCCESS:
+            return { 
+                    loading: false, 
+                    products: action.payload, 
+            }
+        case PRODUCT_TOP_FAIL:
+            return { loading: false, error: action.payload }
         default:
             return state
     }
